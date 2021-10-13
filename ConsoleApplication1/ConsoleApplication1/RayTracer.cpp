@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include <glm/glm.hpp>
 
+#include "Renderer.h"
 #include "Sphere.h"
 #include "Triangle.h"
 
@@ -13,40 +14,9 @@ using namespace std;
 using namespace glm;
 
 #define PI 3.14159265
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-
 SDL_Event event;
 
-bool initSDL(SDL_Window*& window, SDL_Surface*& screenSurface)
-{
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << endl;
-		return false;
-	}
-	else
-	{
-		//create the window
-		window = SDL_CreateWindow("SDL Version", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-		if (window == NULL)
-		{
-			cout << "SDL Window could not be created! SDL_Error: " << SDL_GetError() << endl;
-			return false;
-		}
-		else
-		{
-			screenSurface = SDL_GetWindowSurface(window);
-			return true;
-		}
-	}
-};
-
-void closeSDL(SDL_Window*& window)
-{
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-};
+Renderer renderer;
 
 Uint32 convertColour(vec3 colour)
 {
@@ -84,14 +54,14 @@ int main(int argc, char* args[])
 	///SECTION - SDL Setup
 	SDL_Window* window = NULL;
 	SDL_Surface* screenSurface = NULL;
-	if (!initSDL(window, screenSurface)) return -1;
+	if (!renderer.initSDL(window, screenSurface)) return -1;
 
 	//create two dimensional pxiel array for the image
 	vec3** image = new vec3 * [WIDTH];
 	for (int i = 0; i < WIDTH; i++) image[i] = new vec3[HEIGHT];
 
 	Iar = WIDTH / (float)HEIGHT;
-	tanvalue = tanf(15.0 * PI / 180.0);  //40 degree for big field of view //15 for zoom in
+	tanvalue = tanf(40.0 * PI / 180.0);  //40 degree for big field of view //15 for zoom in
 
 	bool Intersection;
 	float t, min_t, ColorVal;
@@ -100,10 +70,24 @@ int main(int argc, char* args[])
 	vector<float> t_arr;
 	vector<vec3> color_arr;
 	 
+	//add spheres
+	Sphere redSphere(4, vec3(0, 0, -20), vec3(1.00, 0.32, 0.36));
+	color_arr.push_back(redSphere.getMyColor());
+
+	Sphere yellowSphere(2, vec3(5, -1, -15), vec3(0.90, 0.76, 0.46));
+	color_arr.push_back(yellowSphere.getMyColor());
+
+	Sphere blueSphere(3, vec3(5, 0, -25), vec3(0.65, 0.77, 0.97));
+	color_arr.push_back(blueSphere.getMyColor());
+
+	Sphere graySphere(3, vec3(-5.5, 0, -15), vec3(0.90, 0.90, 0.90));
+	color_arr.push_back(graySphere.getMyColor());
+	
 	///light setting
 	vec3 sourcePt;
 	sourcePt.x = 0.0; sourcePt.y = 20.0; sourcePt.z = 0.0;
 
+	//draw the scene
 	for (int y = 0; y < HEIGHT; ++y)
 	{
 		for (int x = 0; x < WIDTH; ++x)
@@ -128,10 +112,43 @@ int main(int argc, char* args[])
 
 			org.x = 0.0; org.y = 0.0; org.z = 0.0;
 
+			//Checking for intersection of the spheres
+			//red sphere
+			Intersection = redSphere.intersection(redSphere.getCenter(), org, dir, redSphere.getRadius(), t);
+			if (Intersection)
+			{
+				t_arr.push_back(t);
+				color_arr.push_back(redSphere.getMyColor());
+			}
+
+			//yellow spher
+			Intersection = yellowSphere.intersection(yellowSphere.getCenter(), org, dir, yellowSphere.getRadius(), t);
+			if (Intersection)
+			{
+				t_arr.push_back(t);
+				color_arr.push_back(yellowSphere.getMyColor());
+			}
+
+			//blue sphere
+			Intersection = blueSphere.intersection(blueSphere.getCenter(), org, dir, blueSphere.getRadius(), t);
+			if (Intersection)
+			{
+				t_arr.push_back(t);
+				color_arr.push_back(blueSphere.getMyColor());
+			}
+
+			//gray sphere
+			Intersection = graySphere.intersection(graySphere.getCenter(), org, dir, graySphere.getRadius(), t);
+			if (Intersection)
+			{
+				t_arr.push_back(t);
+				color_arr.push_back(graySphere.getMyColor());
+			}
+
 			if (t_arr.size() == 0)
 			{
 				image[x][y].x = 1.0;
-				image[x][y].y = 1.0;
+				image[x][y].y = 0.0;
 				image[x][y].z = 1.0;
 
 				PutPixel32_nolock(screenSurface, x, y, convertColour(image[x][y]));
@@ -168,6 +185,6 @@ int main(int argc, char* args[])
 	}
 
 
-	closeSDL(window);
+	renderer.closeSDL(window);
 	return 0;
 }
