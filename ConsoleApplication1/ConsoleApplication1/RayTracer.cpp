@@ -8,6 +8,7 @@
 
 #include "Renderer.h"
 #include "Sphere.h"
+
 #include "Triangle.h"
 
 using namespace std;

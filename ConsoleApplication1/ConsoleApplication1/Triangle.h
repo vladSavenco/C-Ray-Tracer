@@ -10,7 +10,9 @@ private:
 
 public:
 	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 color);
-	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2,vec3 n0, vec3 n1, vec3 n2,vec3 color) :vertex0(v0), vertex1(v1), vertex2(v2), norm0(n0), norm1(n1), norm2(n2)
+
+	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2,vec3 n0, vec3 n1, vec3 n2,vec3 color) 
+		:vertex0(v0), vertex1(v1), vertex2(v2), norm0(n0), norm1(n1), norm2(n2)
 	{
 		mcolor = color;
 	};
