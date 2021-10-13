@@ -72,6 +72,31 @@ void PutPixel32_nolock(SDL_Surface*& surface, int x, int y, Uint32 colour)
 	*((Uint32*)pixel) = colour;
 };
 
+bool intersectSphere(vec3 center, vec3 orig, vec3 dir, float radius, float& t)
+{
+	float t0, t1; // solutions for t if the ray intersects 
+
+	// geometric solution  // vector dir has to be normalize, length is 1.0
+	vec3 L = center - orig;
+	float tca = dot(L, dir);
+	if (tca < 0) return false;
+	float d = dot(L, L) - tca * tca;
+	if (d > (radius * radius)) return false;
+
+	float thc = sqrt(radius * radius - d);
+	t0 = tca - thc;
+	t1 = tca + thc;
+
+	if (t0 > t1) std::swap(t0, t1);
+
+	if (t0 < 0) {
+		t0 = t1; // if t0 is negative, let's use t1 instead 
+		if (t0 < 0) return false; // both t0 and t1 are negative 
+	}
+
+	t = t0;
+	return true;
+}
 
 void ComputeColorSphere(const vec3 sourcePt, const vec3 IntPt, const vec3 CenPt, const vec3 dir, float& ColValue)
 {
