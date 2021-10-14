@@ -68,6 +68,8 @@ int main(int argc, char* args[])
 	float t, min_t, ColorVal;
 	int i, whichone;
 	vec3 ttvec, dir, org, mat_color, final_Color, IntPt;
+
+	//array of the distance of the ray hits
 	vector<float> t_arr;
 	vector<vec3> color_arr;
 	 
@@ -148,9 +150,9 @@ int main(int argc, char* args[])
 
 			if (t_arr.size() == 0)
 			{
-				image[x][y].x = 1.0;
+				image[x][y].x = 0.0;
 				image[x][y].y = 0.0;
-				image[x][y].z = 1.0;
+				image[x][y].z = 0.0;
 
 				PutPixel32_nolock(screenSurface, x, y, convertColour(image[x][y]));
 			}
