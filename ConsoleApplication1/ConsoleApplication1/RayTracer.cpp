@@ -7,8 +7,9 @@
 #include <glm/glm.hpp>
 
 #include "Renderer.h"
-#include "Sphere.h"
 
+#include "Sphere.h"
+#include "Plane.h"
 #include "Triangle.h"
 
 using namespace std;
@@ -86,6 +87,10 @@ int main(int argc, char* args[])
 	Sphere graySphere(3, vec3(-5.5, 0, -15), vec3(0.90, 0.90, 0.90));
 	color_arr.push_back(graySphere.getMyColor());
 	
+	//add a plane
+	Plane whitePlane(vec3(0,-1,0), vec3(0, -5, 0), vec3(1, 1, 1));
+	color_arr.push_back(whitePlane.getMyColor());
+
 	///light setting
 	vec3 sourcePt;
 	sourcePt.x = 0.0; sourcePt.y = 20.0; sourcePt.z = 0.0;
@@ -117,7 +122,7 @@ int main(int argc, char* args[])
 
 			//Checking for intersection of the spheres
 			//red sphere
-			Intersection = redSphere.intersection(redSphere.getCenter(), org, dir, redSphere.getRadius(), t);
+			Intersection = redSphere.Intersection(redSphere.getCenter(), org, dir, redSphere.getRadius(), t);
 			if (Intersection)
 			{
 				t_arr.push_back(t);
@@ -125,7 +130,7 @@ int main(int argc, char* args[])
 			}
 
 			//yellow spher
-			Intersection = yellowSphere.intersection(yellowSphere.getCenter(), org, dir, yellowSphere.getRadius(), t);
+			Intersection = yellowSphere.Intersection(yellowSphere.getCenter(), org, dir, yellowSphere.getRadius(), t);
 			if (Intersection)
 			{
 				t_arr.push_back(t);
@@ -133,7 +138,7 @@ int main(int argc, char* args[])
 			}
 
 			//blue sphere
-			Intersection = blueSphere.intersection(blueSphere.getCenter(), org, dir, blueSphere.getRadius(), t);
+			Intersection = blueSphere.Intersection(blueSphere.getCenter(), org, dir, blueSphere.getRadius(), t);
 			if (Intersection)
 			{
 				t_arr.push_back(t);
@@ -141,11 +146,18 @@ int main(int argc, char* args[])
 			}
 
 			//gray sphere
-			Intersection = graySphere.intersection(graySphere.getCenter(), org, dir, graySphere.getRadius(), t);
+			Intersection = graySphere.Intersection(graySphere.getCenter(), org, dir, graySphere.getRadius(), t);
 			if (Intersection)
 			{
 				t_arr.push_back(t);
 				color_arr.push_back(graySphere.getMyColor());
+			}
+			//white plane
+			Intersection = whitePlane.Intersection(whitePlane.getNormal(),whitePlane.getCenter(),org,dir,t);
+			if (Intersection)
+			{
+				t_arr.push_back(t);
+				color_arr.push_back(whitePlane.getMyColor());
 			}
 
 			if (t_arr.size() == 0)

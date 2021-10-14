@@ -25,7 +25,7 @@ vec3 Sphere::getMyColor(void)
 	return mycolor;
 }
 
-bool Sphere::intersection(vec3 center, vec3 orig, vec3 dir, float radius, float& t)
+bool Sphere::Intersection(vec3 center, vec3 orig, vec3 dir, float radius, float& t)
 {
 	float t0, t1; // solutions for t if the ray intersects 
 

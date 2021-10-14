@@ -2,6 +2,7 @@
 
 triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 color)
 {
+
 }
 
 bool triangle::intersection(vec3 rayDirection, vec3 rayOrigin, float& t, vec3& IntPt, vec3& normVec)

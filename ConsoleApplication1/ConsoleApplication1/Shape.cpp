@@ -4,7 +4,7 @@ shape::shape()
 {
 }
 
-bool shape::intersection(vec3 rayDirection, vec3 rayOrigin, float& t, vec3& IntPt, vec3& normVec)
+bool shape::Intersection(vec3 rayDirection, vec3 rayOrigin, float& t, vec3& IntPt, vec3& normVec)
 {
 	return false;
 }
