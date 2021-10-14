@@ -4,7 +4,7 @@
 Plane::Plane(vec3 norm, vec3 cen, vec3 col)
 {
 	normal = norm;
-	center = cen;
+	position = cen;
 	myColor = col;
 }
 
@@ -13,9 +13,9 @@ vec3 Plane::getMyColor(void)
 	return myColor;
 }
 
-vec3 Plane::getCenter(void)
+vec3 Plane::getPosition(void)
 {
-	return center;
+	return position;
 }
 
 vec3 Plane::getNormal(void)
@@ -23,16 +23,15 @@ vec3 Plane::getNormal(void)
 	return normal;
 }
 
-bool Plane::Intersection(const vec3& normal, const vec3& center, const vec3& org, const vec3& dir, float& t)
+bool Plane::Intersection(Ray* ray)
 {
-
-	float denom = glm::dot(normal, dir);
+	float denom = glm::dot(normal, ray->direction);
 	if (denom > 1e-6) 
 	{
-		vec3 p0l0 = center - org;
+		vec3 p0l0 = position - ray->origin;
 
-		t = glm::dot(p0l0, normal) / denom;
-		if (t >= 0)
+		ray->hitDistance = glm::dot(p0l0, normal) / denom;
+		if (ray->hitDistance >= 0)
 		{
 
 			return true;

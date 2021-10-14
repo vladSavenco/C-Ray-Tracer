@@ -2,7 +2,7 @@
 
 Sphere::Sphere(float r, vec3 cen, vec3 col) {
 	radius = r;
-	center = cen;
+	position = cen;
 	mycolor = col;
 }
 
@@ -15,9 +15,9 @@ float Sphere::getRadius(void)
 	return radius;
 }
 
-vec3 Sphere::getCenter(void)
+vec3 Sphere::getPosition(void)
 {
-	return center;
+	return position;
 }
 
 vec3 Sphere::getMyColor(void)
@@ -25,13 +25,13 @@ vec3 Sphere::getMyColor(void)
 	return mycolor;
 }
 
-bool Sphere::Intersection(vec3 center, vec3 orig, vec3 dir, float radius, float& t)
+bool Sphere::Intersection(Ray* ray)
 {
 	float t0, t1; // solutions for t if the ray intersects 
 
 	// geometric solution  // vector dir has to be normalize, length is 1.0
-	vec3 L = center - orig;
-	float tca = dot(L, dir);
+	vec3 L = position - ray->origin;
+	float tca = dot(L, ray->direction);
 	if (tca < 0) return false;
 	float d = dot(L, L) - tca * tca;
 	if (d > (radius * radius)) return false;
@@ -47,7 +47,7 @@ bool Sphere::Intersection(vec3 center, vec3 orig, vec3 dir, float radius, float&
 		if (t0 < 0) return false; // both t0 and t1 are negative 
 	}
 
-	t = t0;
+	ray->hitDistance = t0;
 	return true;
 }
 

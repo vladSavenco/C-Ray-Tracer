@@ -4,7 +4,7 @@ shape::shape()
 {
 }
 
-bool shape::Intersection(vec3 rayDirection, vec3 rayOrigin, float& t, vec3& IntPt, vec3& normVec)
+bool shape::Intersection(Ray* ray)
 {
 	return false;
 }
@@ -13,6 +13,17 @@ void shape::ComputeColor(const float ambientIntensity, const vec3 IntPt, const v
 {
 }
 
-shape::~shape()
+vec3 shape::getMyColor(void)
 {
+	return myColor;
+}
+
+vec3 shape::getPosition(void)
+{
+	return position;
+}
+
+vec3 shape::getNormal(void)
+{
+	return normal;
 }

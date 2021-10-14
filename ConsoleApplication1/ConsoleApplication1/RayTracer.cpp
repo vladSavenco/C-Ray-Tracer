@@ -18,45 +18,22 @@ using namespace glm;
 #define PI 3.14159265
 SDL_Event event;
 
-Renderer renderer;
-
-Uint32 convertColour(vec3 colour)
-{
-	int tt;
-	Uint8 r, g, b;
-
-	tt = (int)(colour.r * 255);
-	if (tt <= 255) r = tt; else r = 255;
-	tt = (int)(colour.g * 255);
-	if (tt <= 255) g = tt; else g = 255;
-	tt = (int)(colour.b * 255);
-	if (tt <= 255) b = tt; else b = 255;
-
-	Uint32 rgb;
-
-	//check which order SDL is storing bytes
-	rgb = (r << 16) + (g << 8) + b;
-
-	return rgb;
-};
-
-void PutPixel32_nolock(SDL_Surface*& surface, int x, int y, Uint32 colour)
-{
-	Uint8* pixel = (Uint8*)surface->pixels;
-	pixel += (y * surface->pitch) + (x * sizeof(Uint32));
-	*((Uint32*)pixel) = colour;
-};
 
 int main(int argc, char* args[])
 {
-	const int WIDTH = 640;
-	const int HEIGHT = 480;
+	Renderer renderer;
+
+	const int WIDTH = renderer.SCREEN_WIDTH;
+	const int HEIGHT = renderer.SCREEN_HEIGHT;
 	float PixelNdx, PixelNdy, PixelRdx, PixelRdy, Iar, tanvalue, PCameraX, PCameraY;
 
 	///SECTION - SDL Setup
 	SDL_Window* window = NULL;
 	SDL_Surface* screenSurface = NULL;
-	if (!renderer.initSDL(window, screenSurface)) return -1;
+	if (!renderer.initSDL(window, screenSurface))
+	{
+		return -1;
+	}
 
 	//create two dimensional pxiel array for the image
 	vec3** image = new vec3 * [WIDTH];
@@ -76,20 +53,24 @@ int main(int argc, char* args[])
 	 
 	//add spheres
 	Sphere redSphere(4, vec3(0, 0, -20), vec3(1.00, 0.32, 0.36));
-	color_arr.push_back(redSphere.getMyColor());
+	renderer.shapeVec.push_back(&redSphere);
 
 	Sphere yellowSphere(2, vec3(5, -1, -15), vec3(0.90, 0.76, 0.46));
-	color_arr.push_back(yellowSphere.getMyColor());
+	renderer.shapeVec.push_back(&yellowSphere);
 
 	Sphere blueSphere(3, vec3(5, 0, -25), vec3(0.65, 0.77, 0.97));
-	color_arr.push_back(blueSphere.getMyColor());
+	renderer.shapeVec.push_back(&blueSphere);
 
 	Sphere graySphere(3, vec3(-5.5, 0, -15), vec3(0.90, 0.90, 0.90));
-	color_arr.push_back(graySphere.getMyColor());
+	renderer.shapeVec.push_back(&graySphere);
 	
 	//add a plane
-	Plane whitePlane(vec3(0,-1,0), vec3(0, -5, 0), vec3(1, 1, 1));
-	color_arr.push_back(whitePlane.getMyColor());
+	Plane whitePlane(vec3(0,-1,0), vec3(0, -5, 0), vec3(0, 0, 0));
+	renderer.shapeVec.push_back(&whitePlane);
+	
+	//add a triangle
+	triangle rgbTriangle(vec3(30,0, -0.5), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(0, 0,0), vec3(1, 1, 1), vec3(1, 0, 1));
+	renderer.shapeVec.push_back(&rgbTriangle);
 
 	///light setting
 	vec3 sourcePt;
@@ -121,52 +102,26 @@ int main(int argc, char* args[])
 			org.x = 0.0; org.y = 0.0; org.z = 0.0;
 
 			//Checking for intersection of the spheres
-			//red sphere
-			Intersection = redSphere.Intersection(redSphere.getCenter(), org, dir, redSphere.getRadius(), t);
-			if (Intersection)
-			{
-				t_arr.push_back(t);
-				color_arr.push_back(redSphere.getMyColor());
-			}
 
-			//yellow spher
-			Intersection = yellowSphere.Intersection(yellowSphere.getCenter(), org, dir, yellowSphere.getRadius(), t);
-			if (Intersection)
+			for (int i = 0; i < renderer.shapeVec.size(); i++)
 			{
-				t_arr.push_back(t);
-				color_arr.push_back(yellowSphere.getMyColor());
-			}
+				Ray ray(org,dir);
 
-			//blue sphere
-			Intersection = blueSphere.Intersection(blueSphere.getCenter(), org, dir, blueSphere.getRadius(), t);
-			if (Intersection)
-			{
-				t_arr.push_back(t);
-				color_arr.push_back(blueSphere.getMyColor());
-			}
-
-			//gray sphere
-			Intersection = graySphere.Intersection(graySphere.getCenter(), org, dir, graySphere.getRadius(), t);
-			if (Intersection)
-			{
-				t_arr.push_back(t);
-				color_arr.push_back(graySphere.getMyColor());
-			}
-			//white plane
-			Intersection = whitePlane.Intersection(whitePlane.getNormal(),whitePlane.getCenter(),org,dir,t);
-			if (Intersection)
-			{
-				t_arr.push_back(t);
-				color_arr.push_back(whitePlane.getMyColor());
+				Intersection = renderer.shapeVec[i]->Intersection(&ray);
+					if (Intersection == true)
+					{
+						t_arr.push_back(ray.hitDistance);
+						color_arr.push_back(renderer.shapeVec[i]->getMyColor());
+					}
 			}
 
 			if (t_arr.size() == 0)
 			{
-				image[x][y].x = 0.0;
-				image[x][y].y = 0.0;
-				image[x][y].z = 0.0;
+				image[x][y].x = 1.0;
+				image[x][y].y = 1.0;
+				image[x][y].z = 1.0;
 
-				PutPixel32_nolock(screenSurface, x, y, convertColour(image[x][y]));
+				renderer.PutPixel32_nolock(screenSurface, x, y, renderer.convertColour(image[x][y]));
 			}
 			else
 			{
@@ -180,7 +135,7 @@ int main(int argc, char* args[])
 				image[x][y].y = color_arr[whichone].y;
 				image[x][y].z = color_arr[whichone].z;
 
-				PutPixel32_nolock(screenSurface, x, y, convertColour(image[x][y]));
+				renderer.PutPixel32_nolock(screenSurface, x, y, renderer.convertColour(image[x][y]));
 			}
 		}
 	}
