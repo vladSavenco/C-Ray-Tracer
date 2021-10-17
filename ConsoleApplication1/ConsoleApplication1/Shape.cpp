@@ -9,8 +9,12 @@ bool shape::Intersection(Ray* ray)
 	return false;
 }
 
-void shape::ComputeColor(const float ambientIntensity, const vec3 IntPt, const vec3 lightPt, const vec3 rayDirection, float& ColValue)
+void shape::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal)
 {
+	//calculating ambiental lighting
+	vec3 ambientCol = surfaceCol * ambientLight;
+
+	colVal = ambientCol;
 }
 
 vec3 shape::getMyColor(void)

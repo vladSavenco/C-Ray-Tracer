@@ -11,10 +11,12 @@ private:
 	vec3  position;
 	vec3 mycolor;
 
+	int shyniness;
+
 public:
 
 
-	Sphere(float, vec3, vec3);
+	Sphere(float, vec3, vec3,int);
 	~Sphere();
 
 	float getRadius(void);
@@ -22,5 +24,6 @@ public:
 	vec3 getMyColor(void) override;
 
 	bool Intersection(Ray* ray);
-	void ComputeColor(const vec3 sourcePt, const vec3 IntPt, const vec3 CenPt, const vec3 dir, float& ColValue);
+
+	void ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal) override;
 };

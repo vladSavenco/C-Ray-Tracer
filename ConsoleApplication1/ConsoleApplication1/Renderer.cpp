@@ -56,3 +56,10 @@ void Renderer::PutPixel32_nolock(SDL_Surface*& surface, int x, int y, Uint32 col
 	pixel += (y * surface->pitch) + (x * sizeof(Uint32));
 	*((Uint32*)pixel) = colour;
 }
+
+void Renderer::createLight(vec3 org,vec3 intens)
+{
+	Light light(org,intens);
+
+	lightVec.push_back(light);
+}

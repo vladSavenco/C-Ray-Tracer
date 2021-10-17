@@ -17,8 +17,4 @@ public:
 	bool Intersection(Ray* ray) override;
 
 	vec3 getMyColor(void) override;
-
-	void ComputeColor(const float ambientIntensity, const vec3 IntPt, const vec3 lightPt, const vec3 rayDirection, const vec3 tNormvec, float& ColValue);
-
-	~triangle();
 };

@@ -96,11 +96,3 @@ vec3 triangle::getMyColor(void)
 {
 	return u * color0 + v * color1 + w * color2;
 }
-
-void triangle::ComputeColor(const float ambientIntensity, const vec3 IntPt, const vec3 lightPt, const vec3 rayDirection, const vec3 tNormvec, float& ColValue)
-{
-}
-
-triangle::~triangle()
-{
-}

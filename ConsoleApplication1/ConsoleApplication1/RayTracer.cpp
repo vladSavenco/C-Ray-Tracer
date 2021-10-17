@@ -52,29 +52,28 @@ int main(int argc, char* args[])
 	vector<vec3> color_arr;
 	 
 	//add spheres
-	Sphere redSphere(4, vec3(0, 0, -20), vec3(1.00, 0.32, 0.36));
+	Sphere redSphere(4, vec3(0, 0, -20), vec3(1.00, 0.32, 0.36),20);
 	renderer.shapeVec.push_back(&redSphere);
 
-	Sphere yellowSphere(2, vec3(5, -1, -15), vec3(0.90, 0.76, 0.46));
+	Sphere yellowSphere(2, vec3(5, -1, -15), vec3(0.90, 0.76, 0.46),20);
 	renderer.shapeVec.push_back(&yellowSphere);
 
-	Sphere blueSphere(3, vec3(5, 0, -25), vec3(0.65, 0.77, 0.97));
+	Sphere blueSphere(3, vec3(5, 0, -25), vec3(0.65, 0.77, 0.97),20);
 	renderer.shapeVec.push_back(&blueSphere);
 
-	Sphere graySphere(3, vec3(-5.5, 0, -15), vec3(0.90, 0.90, 0.90));
+	Sphere graySphere(3, vec3(-5.5, 0, -15), vec3(0.90, 0.90, 0.90),20);
 	renderer.shapeVec.push_back(&graySphere);
 	
 	//add a plane
-	Plane whitePlane(vec3(0,-1,0), vec3(0, -5, 0), vec3(0, 0, 0));
+	Plane whitePlane(vec3(0,-1,0), vec3(0, -5, 0), vec3(1, 0, 0));
 	renderer.shapeVec.push_back(&whitePlane);
 	
 	//add a triangle
 	triangle rgbTriangle(vec3(30,0, -0.5), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(0, 0,0), vec3(1, 1, 1), vec3(1, 0, 1));
 	renderer.shapeVec.push_back(&rgbTriangle);
 
-	///light setting
-	vec3 sourcePt;
-	sourcePt.x = 0.0; sourcePt.y = 20.0; sourcePt.z = 0.0;
+	///light settings
+	renderer.createLight(vec3(0,20,0),vec3(1.0,1.0,1.0));
 
 	//draw the scene
 	for (int y = 0; y < HEIGHT; ++y)
@@ -101,8 +100,7 @@ int main(int argc, char* args[])
 
 			org.x = 0.0; org.y = 0.0; org.z = 0.0;
 
-			//Checking for intersection of the spheres
-
+			//Checking for intersection of the shapes
 			for (int i = 0; i < renderer.shapeVec.size(); i++)
 			{
 				Ray ray(org,dir);
@@ -111,7 +109,15 @@ int main(int argc, char* args[])
 					if (Intersection == true)
 					{
 						t_arr.push_back(ray.hitDistance);
-						color_arr.push_back(renderer.shapeVec[i]->getMyColor());
+
+						//create a value to give to the pixel
+						vec3 colVal;
+
+						//calling the calculate light function
+						renderer.shapeVec[i]->ComputeColor(vec3(0.1, 0.1, 0.1), renderer.lightVec[0], &ray, renderer.shapeVec[i]->getMyColor(), colVal);
+
+						//pushing back the color of the pixel in the collor array
+						color_arr.push_back(colVal);
 					}
 			}
 

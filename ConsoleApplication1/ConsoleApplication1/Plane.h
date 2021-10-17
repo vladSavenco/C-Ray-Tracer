@@ -18,4 +18,5 @@ public:
 	vec3 getNormal(void) override;
 
 	bool Intersection(Ray* ray);
+	//void ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal) override;
 };

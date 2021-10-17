@@ -18,7 +18,7 @@ public:
 	virtual bool Intersection(Ray* ray);
 
 	//for future ray tracing
-	virtual void ComputeColor(const float ambientIntensity, const vec3 IntPt, const vec3 lightPt, const vec3 rayDirection, float& ColValue);
+	virtual void ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal);
 
 	virtual vec3 getMyColor(void);
 	virtual vec3 getPosition(void);
