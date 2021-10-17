@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2)
+triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2, float shin)
 {
 	position = pos;
 
@@ -11,6 +11,8 @@ triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, ve
 	color0 = col0;
 	color1 = col1;
 	color2 = col2;
+
+	shyniness = shin;
 }
 
 bool triangle::Intersection(Ray* ray)
@@ -31,7 +33,6 @@ bool triangle::Intersection(Ray* ray)
 		if (abs(NdotRayDirection) < 0.000001)
 		{
 			return false;
-			cout << "paralel" << endl;
 		}
 			
 		// they are parallel so they don't intersect ! 
@@ -95,4 +96,33 @@ bool triangle::Intersection(Ray* ray)
 vec3 triangle::getMyColor(void)
 {
 	return u * color0 + v * color1 + w * color2;
+}
+
+void triangle::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal)
+{
+	vec3 ttVec, rVec; //who?
+	float vecDot; //who?
+	float specValue, tt; //who?
+
+	//calculating ambiental lighting
+	vec3 ambientCol = surfaceCol * ambientLight;
+
+	//calculating diffuse lighting
+	//
+	vec3 ligtToPoint = normalize(light.origin - ray->intersectPoint);
+	//
+
+	vec3 normAtIntersec;
+	//
+	vec3 diffuseCol = surfaceCol * light.intensity * std::max(0.0f, dot(ligtToPoint, normAtIntersec));
+
+	//calculate specular value
+	vecDot = dot(normAtIntersec, ligtToPoint);
+	ttVec = normAtIntersec * 2.0f * vecDot;
+
+	rVec = ttVec - ligtToPoint;
+	tt = std::max(0.0f, dot(rVec, -ray->direction)); // "-" ?????????
+	specValue = pow(tt, shyniness) * 1.0f;
+
+	colVal = ambientCol + diffuseCol + specValue;
 }

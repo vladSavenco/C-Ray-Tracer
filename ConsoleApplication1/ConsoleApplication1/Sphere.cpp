@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-Sphere::Sphere(float r, vec3 cen, vec3 col,int shin) {
+Sphere::Sphere(float r, vec3 cen, vec3 col,float shin) {
 	radius = r;
 	position = cen;
 	mycolor = col;
@@ -51,10 +51,10 @@ bool Sphere::Intersection(Ray* ray)
 	t0 = tca - thc;
 	t1 = tca + thc;
 
-	//getting the ray intersect point
-	ray->intersectPoint = ray->origin + ray->direction * t0;
-
-	if (t0 > t1) std::swap(t0, t1);
+	if (t0 > t1)
+	{
+		std::swap(t0, t1);
+	}
 
 	if (t0 < 0) 
 	{
@@ -67,6 +67,9 @@ bool Sphere::Intersection(Ray* ray)
 	}
 
 	ray->hitDistance = t0;
+
+	//getting the ray intersect point
+	ray->intersectPoint = ray->origin + ray->direction * t0;
 
 	return true;
 }
@@ -94,7 +97,7 @@ void Sphere::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surface
 
 	rVec = ttVec - ligtToPoint;
 	tt = std::max(0.0f, dot(rVec,-ray->direction)); // "-" ?????????
-	specValue = pow(tt, shyniness) * 1.0f;
+	specValue = pow(tt, 20) * shyniness;
 
 	colVal = ambientCol + diffuseCol + specValue;
 }

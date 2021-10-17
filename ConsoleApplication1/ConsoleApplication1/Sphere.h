@@ -11,12 +11,12 @@ private:
 	vec3  position;
 	vec3 mycolor;
 
-	int shyniness;
+	float shyniness;
 
 public:
 
 
-	Sphere(float, vec3, vec3,int);
+	Sphere(float, vec3, vec3,float);
 	~Sphere();
 
 	float getRadius(void);
