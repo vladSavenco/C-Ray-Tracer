@@ -69,7 +69,7 @@ int main(int argc, char* args[])
 	renderer.shapeVec.push_back(&whitePlane);
 	
 	//add a triangle
-	triangle rgbTriangle(vec3(30,0, -0.5), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(0, 0,0), vec3(1, 1, 1), vec3(1, 0, 1),1);
+	triangle rgbTriangle(vec3(30,0, -0.5), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(0, 1,0), vec3(0, 1, 0), vec3(0, 1, 0),1);
 	renderer.shapeVec.push_back(&rgbTriangle);
 
 	///light settings

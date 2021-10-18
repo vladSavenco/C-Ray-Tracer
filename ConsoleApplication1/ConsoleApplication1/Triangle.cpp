@@ -13,6 +13,25 @@ triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, ve
 	color2 = col2;
 
 	shyniness = shin;
+
+	getNormals();
+}
+
+void triangle::getNormals()
+{
+	vec3 ab = vert1 - vert0;
+	vec3 ac = vert2 - vert0;
+
+	norm0 = ab * ac;
+
+	vec3 ba = vert0 - vert1;
+	vec3 bc = vert2 - vert1;
+
+	norm1 = ba * bc;
+
+	vec3 ca = vert0 - vert2;
+	vec3 cb = vert1 - vert2;
+	norm2 = ca * cb;
 }
 
 bool triangle::Intersection(Ray* ray)
@@ -61,7 +80,6 @@ bool triangle::Intersection(Ray* ray)
 		c = cross(edge0, vp0);
 		if (dot(normal, c) < 0)
 		{
-			//cout << "edge 1 go fricky" << endl;
 			return false;//p is on the right side
 		}
 
@@ -71,7 +89,6 @@ bool triangle::Intersection(Ray* ray)
 		c = cross(edge1, vp1);
 		if ((u = dot(normal, c)) < 0)
 		{
-			//cout << "edge 2 go fricky" << endl;
 			return false;//p is on the right side
 		}
 
@@ -81,7 +98,6 @@ bool triangle::Intersection(Ray* ray)
 		c = cross(edge2, vp2);
 		if ((v = dot(normal, c)) < 0)
 		{
-			//cout << "edge 3 go fricky" << endl;
 			return false;//p is on the right side
 		}
 
@@ -104,6 +120,8 @@ void triangle::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfa
 	float vecDot; //who?
 	float specValue, tt; //who?
 
+	surfaceCol = u * color0 + v * color1 + w * color2;
+
 	//calculating ambiental lighting
 	vec3 ambientCol = surfaceCol * ambientLight;
 
@@ -112,7 +130,7 @@ void triangle::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfa
 	vec3 ligtToPoint = normalize(light.origin - ray->intersectPoint);
 	//
 
-	vec3 normAtIntersec;
+	vec3 normAtIntersec=normalize(u*norm0+v*norm1+w*norm2);
 	//
 	vec3 diffuseCol = surfaceCol * light.intensity * std::max(0.0f, dot(ligtToPoint, normAtIntersec));
 

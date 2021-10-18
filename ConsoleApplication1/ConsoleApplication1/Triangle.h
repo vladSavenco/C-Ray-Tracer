@@ -6,6 +6,7 @@ class triangle : public shape
 private:
 	vec3 vert0, vert1, vert2;
 	vec3 color0, color1, color2;
+	vec3 norm0, norm1, norm2;
 
 	float v=0, u=0, w=0;
 
@@ -15,6 +16,8 @@ private:
 
 public:
 	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2,float shin);
+
+	void getNormals();
 
 	bool Intersection(Ray* ray) override;
 
