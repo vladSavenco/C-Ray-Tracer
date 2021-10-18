@@ -27,7 +27,7 @@ vec3 Plane::getNormal(void)
 bool Plane::Intersection(Ray* ray)
 {
 	float denom = glm::dot(normal, ray->direction);
-	if (denom > 1e-6) 
+	if (abs(denom) >1e-6) 
 	{
 		vec3 p0l0 = position - ray->origin;
 
@@ -72,7 +72,7 @@ void Plane::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceC
 
 	rVec = ttVec - ligtToPoint;
 	tt = std::max(0.0f, dot(rVec, -ray->direction)); // "-" ?????????
-	specValue =pow(tt, shyniness) *light.intensity.x;
+	specValue =pow(tt, 1.0f) *shyniness;
 
 	colVal = ambientCol + diffuseCol + specValue;
 }

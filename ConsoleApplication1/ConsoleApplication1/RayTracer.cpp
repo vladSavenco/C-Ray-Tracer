@@ -65,7 +65,7 @@ int main(int argc, char* args[])
 	renderer.shapeVec.push_back(&graySphere);
 	
 	//add a plane
-	Plane whitePlane(vec3(0,-1,0), vec3(0, -4, 0), vec3(1, 1, 1),1);
+	Plane whitePlane(vec3(0,1,0), vec3(0, -4, 0), vec3(1, 1, 1),0);
 	renderer.shapeVec.push_back(&whitePlane);
 	
 	//add a triangle
