@@ -72,7 +72,7 @@ void Plane::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceC
 
 	rVec = ttVec - ligtToPoint;
 	tt = std::max(0.0f, dot(rVec, -ray->direction)); // "-" ?????????
-	specValue =pow(tt, 1.0f) *shyniness;
+	specValue =pow(tt, 20.0f) *shyniness;
 
 	colVal = ambientCol + diffuseCol + specValue;
 }

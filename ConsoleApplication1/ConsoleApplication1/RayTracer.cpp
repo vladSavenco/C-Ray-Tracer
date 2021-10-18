@@ -12,6 +12,8 @@
 #include "Plane.h"
 #include "Triangle.h"
 
+#include "GameObj.h"
+
 using namespace std;
 using namespace glm;
 
@@ -52,7 +54,7 @@ int main(int argc, char* args[])
 	vector<vec3> color_arr;
 	 
 	//add spheres
-	Sphere redSphere(4, vec3(0, 0, -20), vec3(1.00, 0.32, 0.36),0);
+	/*Sphere redSphere(4, vec3(0, 0, -20), vec3(1.00, 0.32, 0.36), 0);
 	renderer.shapeVec.push_back(&redSphere);
 
 	Sphere yellowSphere(2, vec3(5, -1, -15), vec3(0.90, 0.76, 0.46),1);
@@ -63,21 +65,33 @@ int main(int argc, char* args[])
 
 	Sphere graySphere(3, vec3(-5.5, 0, -15), vec3(0.90, 0.90, 0.90),1);
 	renderer.shapeVec.push_back(&graySphere);
-	
+	*/
 	//add a plane
-	Plane whitePlane(vec3(0,1,0), vec3(0, -4, 0), vec3(1, 1, 1),0);
+	Plane whitePlane(vec3(0,1,0), vec3(0, -10, 0), vec3(1, 1, 1),1);
 	renderer.shapeVec.push_back(&whitePlane);
 	
 	//add a triangle
-	triangle rgbTriangle(vec3(30,0, -0.5), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(0, 1,0), vec3(0, 1, 0), vec3(0, 1, 0),1);
-	renderer.shapeVec.push_back(&rgbTriangle);
+	//triangle rgbTriangle(vec3(0,0, -10), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(1, 1,0), vec3(1, 1, 0), vec3(1, 1, 0),vec3(0,0.6,1),vec3(-0.4, -0.4, 1),vec3(0.4, -0.4, 1),1);
+	//renderer.shapeVec.push_back(&rgbTriangle);
+
+	//add pig
+	GameObj pig("./Models/Pig.obj", vec3(0, 0.11, -1), vec3(1, 1, 0), 1);
+	for (int i = 0; i < pig.triangleVec.size(); i++)
+	{
+		renderer.shapeVec.push_back(&pig.triangleVec[i]);
+	}
 
 	///light settings
-	renderer.createLight(vec3(10,20,-10),vec3(1.0,1.0,1.0));
+	renderer.createLight(vec3(0,20,0),vec3(1.0,1.0,1.0));
+
+	int nr = 1;
 
 	//draw the scene
 	for (int y = 0; y < HEIGHT; ++y)
 	{
+		cout << "loaded one " << nr << endl;
+		nr++;
+
 		for (int x = 0; x < WIDTH; ++x)
 		{
 			t_arr.clear();

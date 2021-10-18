@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2, float shin)
+triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2, vec3 n0, vec3 n1, vec3 n2, float shin)
 {
 	position = pos;
 
@@ -14,7 +14,11 @@ triangle::triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, ve
 
 	shyniness = shin;
 
-	getNormals();
+	norm0 = n0;
+	norm1 = n1;
+	norm2 = n2;
+
+	//getNormals();
 }
 
 void triangle::getNormals()
@@ -37,19 +41,18 @@ void triangle::getNormals()
 bool triangle::Intersection(Ray* ray)
 {
 		// compute plane's normal
-		vec3 v0v1 = vert1 - vert0;
-		vec3 v0v2 = vert2 - vert0;
+		vec3 vert0vert1 = vert1 - vert0;
+		vec3 vert0vert2 = vert2 - vert0;
 
 		// no need to normalize
-		vec3 normal = cross(v0v1, v0v2);
-
-		float denom = dot(normal, normal);
+		vec3 triNormal = cross(vert0vert1, vert0vert2);
+		float denominator = dot(triNormal, triNormal);
 
 		//finding P
-
 		// check if ray and plane are parallel ?
-		float NdotRayDirection = dot(normal, ray->direction);
-		if (abs(NdotRayDirection) < 0.000001)
+		float TriNormDotRayDirection = dot(triNormal, ray->direction);
+
+		if (abs(TriNormDotRayDirection) < 0.00001)
 		{
 			return false;
 		}
@@ -57,10 +60,10 @@ bool triangle::Intersection(Ray* ray)
 		// they are parallel so they don't intersect ! 
 
 		//compute d parameter using equation 2
-		float d = dot(normal, vert0);
+		float d = dot(triNormal, vert0);
 
 		//compute ray hit disstance
-		ray->hitDistance = (dot(normal, ray->origin) + d);
+		ray->hitDistance = (dot(triNormal, ray->origin) + d)/ TriNormDotRayDirection;
 
 		//check if triangle is behind the ray
 		if (ray->hitDistance < 0)
@@ -68,8 +71,10 @@ bool triangle::Intersection(Ray* ray)
 			//cout << "triangle behind ray" << endl;
 			return false;
 		}
+
 		//compute the intersection point using equation 1
 		vec3 hitPoint = ray->origin + ray->hitDistance * ray->direction;
+		ray->intersectPoint = hitPoint;
 
 		//inside-out test
 		vec3 c;
@@ -78,7 +83,7 @@ bool triangle::Intersection(Ray* ray)
 		vec3 edge0 = vert1 - vert0;
 		vec3 vp0 = hitPoint - vert0;
 		c = cross(edge0, vp0);
-		if (dot(normal, c) < 0)
+		if (dot(triNormal, c) < 0)
 		{
 			return false;//p is on the right side
 		}
@@ -87,7 +92,7 @@ bool triangle::Intersection(Ray* ray)
 		vec3 edge1 = vert2 - vert1;
 		vec3 vp1 = hitPoint - vert1;
 		c = cross(edge1, vp1);
-		if ((u = dot(normal, c)) < 0)
+		if ((u = dot(triNormal, c)) < 0)
 		{
 			return false;//p is on the right side
 		}
@@ -96,13 +101,13 @@ bool triangle::Intersection(Ray* ray)
 		vec3 edge2 = vert0 - vert2;
 		vec3 vp2 = hitPoint - vert2;
 		c = cross(edge2, vp2);
-		if ((v = dot(normal, c)) < 0)
+		if ((v = dot(triNormal, c)) < 0)
 		{
 			return false;//p is on the right side
 		}
 
-		u /= denom;
-		v /= denom;
+		u =u/ denominator;
+		v =v/ denominator;
 
 		w = 1 - v - u;
 		return true;//this ray hits the triangle
@@ -140,7 +145,7 @@ void triangle::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfa
 
 	rVec = ttVec - ligtToPoint;
 	tt = std::max(0.0f, dot(rVec, -ray->direction)); // "-" ?????????
-	specValue = pow(tt, shyniness) * 1.0f;
+	specValue = pow(tt, 20.0f) * shyniness;
 
 	colVal = ambientCol + diffuseCol + specValue;
 }

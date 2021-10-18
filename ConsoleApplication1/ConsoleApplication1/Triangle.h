@@ -15,7 +15,7 @@ private:
 	float shyniness=1.0f;
 
 public:
-	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2,float shin);
+	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2,vec3 n0,vec3 n1,vec3 n2,float shin);
 
 	void getNormals();
 
