@@ -38,6 +38,11 @@ void triangle::getNormals()
 	norm2 = ca * cb;
 }
 
+vec3 triangle::getPosition(void)
+{
+	return position;
+}
+
 bool triangle::Intersection(Ray* ray)
 {
 		// compute plane's normal

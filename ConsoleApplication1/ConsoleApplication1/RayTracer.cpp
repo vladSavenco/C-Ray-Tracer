@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 
 #include "Renderer.h"
+#include "Ray.h"
 
 #include "Sphere.h"
 #include "Plane.h"
@@ -19,6 +20,27 @@ using namespace glm;
 
 #define PI 3.14159265
 SDL_Event event;
+
+bool shadowCalculation(Light light, Ray ray, shape &myShape)
+{
+	//calculate ray direction
+	vec3 l = light.origin - ray.intersectPoint;
+	vec3 normal = ray.intersectPoint - myShape.getPosition();
+
+	//normalize vectors
+	normal = normalize(normal);
+	l = normalize(l);
+	//create new ray
+	Ray ray2(ray.intersectPoint,l);
+
+	//if we hit any obj then there should be a shadow
+	if (myShape.Intersection(&ray2) == true)
+	{
+		return true;
+	}
+	else
+		return false;
+}
 
 int main(int argc, char* args[])
 {
@@ -66,15 +88,15 @@ int main(int argc, char* args[])
 	renderer.shapeVec.push_back(&graySphere);
 	*/
 	//add a plane
-	Plane whitePlane(vec3(0,1,0), vec3(0, -10, 0), vec3(1, 1, 1),1);
+	Plane whitePlane(vec3(0,1,0), vec3(0, -4, 0), vec3(1, 1, 1),1);
 	renderer.shapeVec.push_back(&whitePlane);
 	
 	//add a triangle
-	//triangle rgbTriangle(vec3(0,0, -10), vec3(8, 0, 0), vec3(-8, 0, 0), vec3(0, 8,0), vec3(1, 1,0), vec3(1, 1, 0), vec3(1, 1, 0),vec3(0,0.6,1),vec3(-0.4, -0.4, 1),vec3(0.4, -0.4, 1),1);
+	//triangle rgbTriangle(vec3(5,0, -7), vec3(1, 0, 0), vec3(-1, 0, 0), vec3(0, 1,0), vec3(1, 1,0), vec3(1, 1, 0), vec3(1, 1, 0),vec3(0,0.6,1),vec3(-0.4, -0.4, 1),vec3(0.4, -0.4, 1),1);
 	//renderer.shapeVec.push_back(&rgbTriangle);
 
 	//add pig
-	GameObj pig("./Models/Pig.obj", vec3(0, 0.11, -1), vec3(1, 1, 0), 1);
+	GameObj pig("./Models/Pig.obj", vec3(0, 0, -1), vec3(1, 1, 0), 1);
 	for (int i = 0; i < pig.triangleVec.size(); i++)
 	{
 		renderer.shapeVec.push_back(&pig.triangleVec[i]);
@@ -83,13 +105,13 @@ int main(int argc, char* args[])
 	///light settings
 	renderer.createLight(vec3(0,20,0),vec3(1.0,1.0,1.0));
 
-	int nr = 1;
+	//int nr = 1;
 
 	//draw the scene
 	for (int y = 0; y < HEIGHT; ++y)
 	{
-		cout << "loaded one " << nr << endl;
-		nr++;
+		//cout << "loaded one " << nr << endl;
+		//nr++;
 
 		for (int x = 0; x < WIDTH; ++x)
 		{
@@ -121,16 +143,39 @@ int main(int argc, char* args[])
 				Intersection = renderer.shapeVec[i]->Intersection(&ray);
 					if (Intersection == true)
 					{
-						t_arr.push_back(ray.hitDistance);
+						//check for shadows
+						//bool isInShadow = false;
 
-						//create a value to give to the pixel
-						vec3 colVal=renderer.shapeVec[i]->getMyColor();
+						//for (int j = 0; j < renderer.shapeVec.size(); j++)
+						//{
+						//	if (i == j)
+						//	{
+						//		continue;
+						//	}
 
-						//calling the calculate light function
-						renderer.shapeVec[i]->ComputeColor(vec3(0.1, 0.1, 0.1), renderer.lightVec[0], &ray, renderer.shapeVec[i]->getMyColor(), colVal);
+						//	if (shadowCalculation(renderer.lightVec[0], ray, *renderer.shapeVec[j])==true)
+						//	{
+						//		isInShadow = true;
+						//	}
+						//}
 
-						//pushing back the color of the pixel in the collor array
-						color_arr.push_back(colVal);
+						//if (isInShadow != true)
+						//{
+							t_arr.push_back(ray.hitDistance);
+
+							//create a value to give to the pixel
+							vec3 colVal = renderer.shapeVec[i]->getMyColor();
+
+							//calling the calculate light function
+							renderer.shapeVec[i]->ComputeColor(vec3(0.1, 0.1, 0.1), renderer.lightVec[0], &ray, renderer.shapeVec[i]->getMyColor(), colVal);
+
+							//pushing back the color of the pixel in the collor array
+							color_arr.push_back(colVal);
+						//}
+						//if (isInShadow == true)
+						//{
+						//	color_arr.push_back(vec3(0, 0, 0));
+						//}
 					}
 			}
 

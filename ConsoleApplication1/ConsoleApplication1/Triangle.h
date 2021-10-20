@@ -19,6 +19,8 @@ public:
 
 	void getNormals();
 
+	vec3 getPosition(void)override;
+
 	bool Intersection(Ray* ray) override;
 
 	vec3 getMyColor(void) override;
