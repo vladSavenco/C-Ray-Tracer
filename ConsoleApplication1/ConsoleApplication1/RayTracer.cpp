@@ -20,7 +20,6 @@ using namespace glm;
 #define PI 3.14159265
 SDL_Event event;
 
-
 int main(int argc, char* args[])
 {
 	Renderer renderer;
