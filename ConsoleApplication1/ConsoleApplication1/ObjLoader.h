@@ -143,7 +143,7 @@ static std::vector<VertexWithAll> loadOBJ(std::string file_name)
 	{
 
 		vertices[i].position = vertex_positions[vertex_position_indicies[i] - 1];
-		vertices[i].textcoord = vertex_textcoords[vertex_textcoord_indicies[i] - 1];
+		//vertices[i].textcoord = vertex_textcoords[vertex_textcoord_indicies[i] - 1];
 		vertices[i].normal = vertex_normals[vertex_normal_indicies[i] - 1];
 		vertices[i].color = glm::vec3(1.f, 1.f, 1.f);
 	}

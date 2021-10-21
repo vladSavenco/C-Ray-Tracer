@@ -103,16 +103,19 @@ int main(int argc, char* args[])
 	}
 
 	///light settings
-	renderer.createLight(vec3(0,20,0),vec3(1.0,1.0,1.0));
-
-	//int nr = 1;
+	renderer.createLight(vec3(0, 20, 0), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(10, 20, 0), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(-10, 20, 0), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(0, 20, 10), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(0, 20, -10), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(10, 20, 10), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(-10, 20, -10), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(10, 20, -10), vec3(1.0, 1.0, 1.0));
+	renderer.createLight(vec3(-10, 20, 10), vec3(1.0, 1.0, 1.0));
 
 	//draw the scene
 	for (int y = 0; y < HEIGHT; ++y)
 	{
-		//cout << "loaded one " << nr << endl;
-		//nr++;
-
 		for (int x = 0; x < WIDTH; ++x)
 		{
 			t_arr.clear();
@@ -143,39 +146,57 @@ int main(int argc, char* args[])
 				Intersection = renderer.shapeVec[i]->Intersection(&ray);
 					if (Intersection == true)
 					{
-						//check for shadows
-						//bool isInShadow = false;
+						t_arr.push_back(ray.hitDistance);
 
-						//for (int j = 0; j < renderer.shapeVec.size(); j++)
-						//{
-						//	if (i == j)
-						//	{
-						//		continue;
-						//	}
+						//create a value to give to the pixel
+						vec3 colVal = renderer.shapeVec[i]->getMyColor();
 
-						//	if (shadowCalculation(renderer.lightVec[0], ray, *renderer.shapeVec[j])==true)
-						//	{
-						//		isInShadow = true;
-						//	}
-						//}
+						//calling the calculate light function
+						renderer.shapeVec[i]->ComputeColor(vec3(0.1, 0.1, 0.1), renderer.lightVec[0], &ray, renderer.shapeVec[i]->getMyColor(), colVal);
 
-						//if (isInShadow != true)
-						//{
-							t_arr.push_back(ray.hitDistance);
+						color_arr.push_back(colVal);
 
-							//create a value to give to the pixel
-							vec3 colVal = renderer.shapeVec[i]->getMyColor();
+						//check for shadows?
+						/*for (int j = 0; j < renderer.shapeVec.size(); j++)
+						{
+							bool isInShadow = false;
 
-							//calling the calculate light function
-							renderer.shapeVec[i]->ComputeColor(vec3(0.1, 0.1, 0.1), renderer.lightVec[0], &ray, renderer.shapeVec[i]->getMyColor(), colVal);
+							if (i == j)
+							{
+								continue;
+							}
+
+							//create a vec3 final color
+							vec3 finalCol(0, 0, 0);
+
+							for (int m = 0; m < renderer.lightVec.size(); m++)
+							{
+								if (shadowCalculation(renderer.lightVec[m], ray, *renderer.shapeVec[j]) == true)
+								{
+									isInShadow = true;
+								}
+								else
+								{
+									isInShadow = false;
+								}
+
+								if (isInShadow != true)
+								{
+									finalCol = finalCol+colVal;
+								}
+								if (isInShadow == true)
+								{
+									finalCol = finalCol + vec3 (0,0,0);
+								}
+							}
+
+							finalCol.x = finalCol.x /renderer.lightVec.size();
+							finalCol.y = finalCol.y / renderer.lightVec.size();
+							finalCol.z = finalCol.z / renderer.lightVec.size();
 
 							//pushing back the color of the pixel in the collor array
-							color_arr.push_back(colVal);
-						//}
-						//if (isInShadow == true)
-						//{
-						//	color_arr.push_back(vec3(0, 0, 0));
-						//}
+							color_arr.push_back(finalCol);
+						}*/
 					}
 			}
 
