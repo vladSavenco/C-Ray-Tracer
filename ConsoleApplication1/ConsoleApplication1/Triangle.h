@@ -14,6 +14,8 @@ private:
 
 	float shyniness=1.0f;
 
+	vec3 ambCol;
+
 public:
 	triangle(vec3 pos, vec3 v0, vec3 v1, vec3 v2, vec3 col0, vec3 col1, vec3 col2,vec3 n0,vec3 n1,vec3 n2,float shin);
 
@@ -26,4 +28,6 @@ public:
 	vec3 getMyColor(void) override;
 
 	void ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal) override;
+
+	virtual vec3 getAmb(void);
 };

@@ -13,9 +13,11 @@ public:
 	vec3 origin;
 	vec3 intensity;
 
-	Light(vec3 org,vec3 intens)
+	Light(vec3 org, vec3 intens)
 	{
 		origin = org;
 		intensity = intens;
 	}
+
+	Light(){}
 };

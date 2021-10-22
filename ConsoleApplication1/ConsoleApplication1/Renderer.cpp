@@ -1,5 +1,10 @@
 #include "Renderer.h"
 
+Renderer::Renderer()
+{
+
+}
+
 bool Renderer::initSDL(SDL_Window*& window, SDL_Surface*& screenSurface)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -57,9 +62,18 @@ void Renderer::PutPixel32_nolock(SDL_Surface*& surface, int x, int y, Uint32 col
 	*((Uint32*)pixel) = colour;
 }
 
-void Renderer::createLight(vec3 org,vec3 intens)
+void Renderer::createAreaLight(vec3 pos, int lightAmmount,vec3 intens)
 {
-	Light light(org,intens);
+	for (int i = 0; i < lightAmmount; i++)
+	{
+		for (int j = 0; j < lightAmmount; j++)
+		{
+			for (int k = 0; k < lightAmmount; k++)
+			{
+				Light light(vec3(pos.x + i + (rand() % 10), pos.y + j + (rand() % 10), pos.z + k + (rand() % 10)), intens);
 
-	lightVec.push_back(light);
+				LigtArr[i][j][k] = light;
+			}
+		}
+	}
 }

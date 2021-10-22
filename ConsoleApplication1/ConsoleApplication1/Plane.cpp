@@ -58,6 +58,8 @@ void Plane::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceC
 	//calculating ambiental lighting
 	vec3 ambientCol = surfaceCol * ambientLight;
 
+	ambCol = ambientCol;
+
 	//calculating diffuse lighting
 	//
 	vec3 ligtToPoint = normalize(light.origin - ray->intersectPoint);
@@ -75,4 +77,9 @@ void Plane::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceC
 	specValue =pow(tt, 20.0f) *shyniness;
 
 	colVal = ambientCol + diffuseCol + specValue;
+}
+
+vec3 Plane::getAmb(void)
+{
+	return ambCol;
 }

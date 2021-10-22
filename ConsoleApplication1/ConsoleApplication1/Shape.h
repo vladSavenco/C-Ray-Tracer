@@ -11,6 +11,8 @@ private:
 	vec3 diffuseColor;
 	vec3 diffuseItensity;
 
+	vec3 ambCol;
+
 public:
 
 
@@ -23,4 +25,6 @@ public:
 	virtual vec3 getMyColor(void);
 	virtual vec3 getPosition(void);
 	virtual vec3 getNormal(void);
+
+	virtual vec3 getAmb(void);
 };

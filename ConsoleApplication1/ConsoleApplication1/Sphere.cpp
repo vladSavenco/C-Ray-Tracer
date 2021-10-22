@@ -83,6 +83,8 @@ void Sphere::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surface
 	//calculating ambiental lighting
 	vec3 ambientCol = surfaceCol * ambientLight;
 
+	ambCol = ambientCol;
+
 	//calculating diffuse lighting
 	//
 	vec3 ligtToPoint = normalize(light.origin - ray->intersectPoint);
@@ -100,4 +102,9 @@ void Sphere::ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surface
 	specValue = pow(tt, 20) * shyniness;
 
 	colVal = ambientCol + diffuseCol + specValue;
+}
+
+vec3 Sphere::getAmb(void)
+{
+	return ambCol;
 }

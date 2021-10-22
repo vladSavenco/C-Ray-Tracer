@@ -10,6 +10,8 @@ private:
 
 	float shyniness;
 
+	vec3 ambCol;
+
 public:
 
 
@@ -21,4 +23,6 @@ public:
 
 	bool Intersection(Ray* ray);
 	void ComputeColor(vec3 ambientLight, Light light, Ray* ray, vec3 surfaceCol, vec3& colVal) override;
+
+	vec3 getAmb(void);
 };

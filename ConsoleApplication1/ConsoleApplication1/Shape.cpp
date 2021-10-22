@@ -31,3 +31,8 @@ vec3 shape::getNormal(void)
 {
 	return normal;
 }
+
+vec3 shape::getAmb(void)
+{
+	return ambCol;
+}

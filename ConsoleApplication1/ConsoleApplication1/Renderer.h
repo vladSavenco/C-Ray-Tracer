@@ -4,15 +4,19 @@
 #include <vector>
 
 #include "Shape.h"
+#include "Light.h"
 
 class Renderer
 {
 public:
 	std::vector<shape*> shapeVec;
-	std::vector<Light> lightVec;
 
-	const int SCREEN_WIDTH = 1920;
-	const int SCREEN_HEIGHT = 1080;
+	Light LigtArr[1][1][1];
+
+	const int SCREEN_WIDTH = 720;
+	const int SCREEN_HEIGHT = 480;
+
+	Renderer();
 
 	bool initSDL(SDL_Window*& window, SDL_Surface*& screenSurface);
 	void closeSDL(SDL_Window*& window);
@@ -20,6 +24,6 @@ public:
 	Uint32 convertColour(vec3 colour);
 	void PutPixel32_nolock(SDL_Surface*& surface, int x, int y, Uint32 colour);
 
-	void createLight(vec3 org,vec3 intens);
+	void createAreaLight(vec3 pos, int lightAmmount, vec3 intens);
 };
 
