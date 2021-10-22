@@ -12,6 +12,7 @@ public:
 	std::vector<shape*> shapeVec;
 
 	Light LigtArr[1][1][1];
+	int arrSize=1;
 
 	const int SCREEN_WIDTH = 720;
 	const int SCREEN_HEIGHT = 480;
